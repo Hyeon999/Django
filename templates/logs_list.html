@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>로그 목록</title>
+    <style>
+        #list-group {
+            list-style-type: none;
+        }
+
+        #list-group li {
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>로그 목록</h1>
+    <ul id="list-group">
+        
+    </ul>
+</body>
+</html>
+
+<!-- logs_list.html -->
+
+<!-- Include jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        // 매 초마다 Ajax 요청을 보냅니다.
+        setInterval(function(){
+            $.ajax({
+                url: '/getlist',  // logs_list 뷰의 URL을 입력하세요
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var ul_list = $("#list-group");
+                    ul_list.empty();
+                    for (var i = 0; i < data.length; i++) {
+                        switch (data[i].event) {
+                            case 'created':
+                                ul_list.append("<li class='llist-group-item list-group-item-primary mb-3'> seq : " + data[i].seq + " / event : " + data[i].event + " / create_date : " + data[i].create_date + "</br>message : " + data[i].message + "</li>");
+                                break;
+                            case 'modified':
+                                ul_list.append("<li class='llist-group-item list-group-item-warning mb-3'> seq : " + data[i].seq + " / event : " + data[i].event + " / create_date : " + data[i].create_date + "</br>message : " + data[i].message + "</li>");
+                                break;
+                            case 'deleted':
+                                ul_list.append("<li class='llist-group-item list-group-item-danger mb-3'> seq : " + data[i].seq + " / event : " + data[i].event + " / create_date : " + data[i].create_date + "</br>message : " + data[i].message + "</li>");
+                                break;
+                            case 'Connected':
+                                ul_list.append("<li class='llist-group-item list-group-item-success mb-3'> seq : " + data[i].seq + " / event : " + data[i].event + " / create_date : " + data[i].create_date + "</br>message : " + data[i].message + "</li>");
+                                break;
+                        }
+                        
+                    } 
+                    
+                    // 성공적으로 데이터를 받았을 때의 처리를 여기에 작성하세요
+                    // 예를 들어, 받은 데이터를 화면에 표시하는 등의 동작을 수행할 수 있습니다.
+                    
+                },
+                error: function(error) {
+                    // 에러가 발생했을 때의 처리를 여기에 작성하세요
+                    console.log('Error occurred:', error);
+                }
+            });
+        }, 1000); // 1초마다 Ajax 요청을 보냅니다.
+    });
+</script>
+
+
